@@ -18,6 +18,7 @@ type
     Movimentaes1: TMenuItem;
     ListaNegociacoes: TMenuItem;
     procedure Sair1Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -31,9 +32,20 @@ implementation
 
 {$R *.dfm}
 
+uses uDataModulePrincipal;
+
+procedure TMenu.FormCreate(Sender: TObject);
+begin
+    if DataModulePrincipal = nil then
+        Application.CreateForm(TDataModulePrincipal, DataModulePrincipal);
+end;
+
 procedure TMenu.Sair1Click(Sender: TObject);
 begin
-    Close;
+    if MessageDlg('Tem certeza que deseja sair?', mtConfirmation, [mbYes, mbNo], 0, mbYes) = 6 then
+    begin
+        Close;
+    end;
 end;
 
 end.
