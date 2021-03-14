@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, System.UITypes;
 
 type
   TMenu = class(TForm)
@@ -19,6 +19,10 @@ type
     ListaNegociacoes: TMenuItem;
     procedure Sair1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
+    procedure CadastroDistribuidorClick(Sender: TObject);
+    procedure CadastroProdutosClick(Sender: TObject);
+    procedure CadastroProdutoClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -32,7 +36,28 @@ implementation
 
 {$R *.dfm}
 
-uses uDataModulePrincipal;
+uses uDataModulePrincipal, uListaDistribuidores, uListaProdutos,
+  uListaProdutores;
+
+procedure TMenu.CadastroDistribuidorClick(Sender: TObject);
+begin
+    TListaDistribuidores.Create(Self);
+end;
+
+procedure TMenu.CadastroProdutoClick(Sender: TObject);
+begin
+    TListaProdutores.Create(Self);
+end;
+
+procedure TMenu.CadastroProdutosClick(Sender: TObject);
+begin
+    TListaProdutos.Create(Self);
+end;
+
+procedure TMenu.FormActivate(Sender: TObject);
+begin
+    WindowState := wsMaximized;
+end;
 
 procedure TMenu.FormCreate(Sender: TObject);
 begin

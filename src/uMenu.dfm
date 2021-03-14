@@ -10,8 +10,10 @@ object Menu: TMenu
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  FormStyle = fsMDIForm
   Menu = MainMenu1
   OldCreateOrder = False
+  OnActivate = FormActivate
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
@@ -29,12 +31,15 @@ object Menu: TMenu
       Caption = 'Cadastros'
       object CadastroDistribuidor: TMenuItem
         Caption = 'Distribuidores'
+        OnClick = CadastroDistribuidorClick
       end
       object CadastroProdutos: TMenuItem
         Caption = 'Produtos'
+        OnClick = CadastroProdutosClick
       end
       object CadastroProduto: TMenuItem
         Caption = 'Produtores'
+        OnClick = CadastroProdutoClick
       end
     end
     object Movimentaes1: TMenuItem

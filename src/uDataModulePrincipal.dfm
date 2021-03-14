@@ -26,6 +26,7 @@ object DataModulePrincipal: TDataModulePrincipal
     Top = 24
   end
   object QueryDistribuidor: TFDQuery
+    AfterInsert = QueryDistribuidorAfterInsert
     CachedUpdates = True
     Connection = FDConnection1
     SQL.Strings = (
@@ -36,6 +37,7 @@ object DataModulePrincipal: TDataModulePrincipal
       item
         Name = 'ID'
         DataType = ftInteger
+        FDDataType = dtInt32
         ParamType = ptInput
       end>
     object QueryDistribuidorID: TIntegerField
@@ -43,7 +45,6 @@ object DataModulePrincipal: TDataModulePrincipal
       FieldName = 'ID'
       Origin = 'ID'
       ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
-      Required = True
     end
     object QueryDistribuidorNOME: TStringField
       DisplayLabel = 'Nome'
@@ -59,6 +60,8 @@ object DataModulePrincipal: TDataModulePrincipal
     end
   end
   object QueryProdutor: TFDQuery
+    BeforePost = QueryProdutorBeforePost
+    BeforeDelete = QueryProdutorBeforeDelete
     CachedUpdates = True
     Connection = FDConnection1
     SQL.Strings = (
@@ -86,6 +89,7 @@ object DataModulePrincipal: TDataModulePrincipal
     end
   end
   object QueryProduto: TFDQuery
+    AfterInsert = QueryProdutoAfterInsert
     CachedUpdates = True
     Connection = FDConnection1
     SQL.Strings = (
@@ -237,12 +241,20 @@ object DataModulePrincipal: TDataModulePrincipal
     CachedUpdates = True
     Connection = FDConnection1
     SQL.Strings = (
-      'SELECT * FROM PRODUTOR_CREDITO WHERE ID = :ID order by 1,2')
+      
+        'SELECT * FROM PRODUTOR_CREDITO WHERE ID = :ID AND ID_PRODUTOR = ' +
+        ':ID_PRODUTOR')
     Left = 24
     Top = 288
     ParamData = <
       item
         Name = 'ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'ID_PRODUTOR'
+        DataType = ftInteger
         ParamType = ptInput
       end>
     object QueryProdutorCreditoID: TIntegerField
@@ -259,9 +271,12 @@ object DataModulePrincipal: TDataModulePrincipal
       FieldName = 'ID_DISTRIBUIDOR'
       Origin = 'ID_DISTRIBUIDOR'
     end
-    object QueryProdutorCreditoVALOR: TIntegerField
+    object QueryProdutorCreditoVALOR: TFMTBCDField
+      DisplayLabel = 'Valor'
       FieldName = 'VALOR'
       Origin = 'VALOR'
+      Precision = 18
+      Size = 2
     end
   end
   object DataSourceProdutorCredito: TDataSource
@@ -276,23 +291,22 @@ object DataModulePrincipal: TDataModulePrincipal
       'SELECT * FROM DISTRIBUIDOR')
     Left = 160
     Top = 120
-    object IntegerField1: TIntegerField
+    object QueryListaDistribuidorID: TIntegerField
       DisplayLabel = 'C'#243'digo'
       FieldName = 'ID'
       Origin = 'ID'
       ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
       Required = True
     end
-    object StringField1: TStringField
+    object QueryListaDistribuidorNOME: TStringField
       DisplayLabel = 'Nome'
       FieldName = 'NOME'
       Origin = 'NOME'
       Size = 255
     end
-    object StringField2: TStringField
+    object QueryListaDistribuidorCNPJ: TStringField
       FieldName = 'CNPJ'
       Origin = 'CNPJ'
-      EditMask = '###.###.###/####-##'
       Size = 30
     end
   end
@@ -308,14 +322,14 @@ object DataModulePrincipal: TDataModulePrincipal
       'SELECT * FROM PRODUTOR')
     Left = 160
     Top = 240
-    object IntegerField3: TIntegerField
+    object QueryListaProdutorID: TIntegerField
       DisplayLabel = 'C'#243'digo'
       FieldName = 'ID'
       Origin = 'ID'
       ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
       Required = True
     end
-    object StringField5: TStringField
+    object QueryListaProdutorNOME: TStringField
       DisplayLabel = 'Nome'
       FieldName = 'NOME'
       Origin = 'NOME'
@@ -328,7 +342,9 @@ object DataModulePrincipal: TDataModulePrincipal
     Top = 240
   end
   object QueryListaProdutorCredito: TFDQuery
+    OnCalcFields = QueryListaProdutorCreditoCalcFields
     CachedUpdates = True
+    IndexFieldNames = 'ID'
     Connection = FDConnection1
     SQL.Strings = (
       
@@ -343,22 +359,35 @@ object DataModulePrincipal: TDataModulePrincipal
         ParamType = ptInput
       end>
     object QueryListaProdutorCreditoID: TIntegerField
+      DisplayLabel = 'Sequ'#234'ncia'
       FieldName = 'ID'
       Origin = 'ID'
       ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
       Required = True
     end
     object QueryListaProdutorCreditoID_PRODUTOR: TIntegerField
+      DisplayLabel = 'C'#243'digo Produtor'
       FieldName = 'ID_PRODUTOR'
       Origin = 'ID_PRODUTOR'
     end
     object QueryListaProdutorCreditoID_DISTRIBUIDOR: TIntegerField
+      DisplayLabel = 'C'#243'digo Distribuidor'
       FieldName = 'ID_DISTRIBUIDOR'
       Origin = 'ID_DISTRIBUIDOR'
     end
-    object QueryListaProdutorCreditoVALOR: TIntegerField
+    object QueryListaProdutorCreditoDISTRIBUIDORNOME: TStringField
+      DisplayLabel = 'Distribuidor'
+      FieldKind = fkCalculated
+      FieldName = 'DISTRIBUIDORNOME'
+      Size = 255
+      Calculated = True
+    end
+    object QueryListaProdutorCreditoVALOR: TFMTBCDField
+      DisplayLabel = 'Valor'
       FieldName = 'VALOR'
       Origin = 'VALOR'
+      Precision = 18
+      Size = 2
     end
   end
   object DataSourceListaProdutorCredito: TDataSource
@@ -373,18 +402,21 @@ object DataModulePrincipal: TDataModulePrincipal
       'SELECT * FROM PRODUTO')
     Left = 160
     Top = 408
-    object IntegerField2: TIntegerField
+    object QueryListaProdutoID: TIntegerField
+      DisplayLabel = 'C'#243'digo'
       FieldName = 'ID'
       Origin = 'ID'
       ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
       Required = True
     end
-    object StringField3: TStringField
+    object QueryListaProdutoNOME: TStringField
+      DisplayLabel = 'Nome'
       FieldName = 'NOME'
       Origin = 'NOME'
       Size = 255
     end
-    object FMTBCDField1: TFMTBCDField
+    object QueryListaProdutoVALOR: TFMTBCDField
+      DisplayLabel = 'Valor'
       FieldName = 'VALOR'
       Origin = 'VALOR'
       Precision = 18
@@ -429,7 +461,7 @@ object DataModulePrincipal: TDataModulePrincipal
       Size = 2
     end
   end
-  object DataSource1: TDataSource
+  object DataSourceListaNegociacao: TDataSource
     DataSet = QueryListaNegociacao
     Left = 200
     Top = 528
@@ -485,6 +517,53 @@ object DataModulePrincipal: TDataModulePrincipal
     object QueryListaNegociacaoItemID_PRODUTO: TIntegerField
       FieldName = 'ID_PRODUTO'
       Origin = 'ID_PRODUTO'
+    end
+  end
+  object QueryCodigo: TFDQuery
+    CachedUpdates = True
+    Connection = FDConnection1
+    SQL.Strings = (
+      'select 1 CODIGO from RDB$DATABASE')
+    Left = 432
+    Top = 56
+    object QueryCodigoCODIGO: TIntegerField
+      AutoGenerateValue = arDefault
+      FieldName = 'CODIGO'
+      Origin = 'CODIGO'
+      ProviderFlags = []
+      ReadOnly = True
+    end
+  end
+  object QueryDistribuidorCalc: TFDQuery
+    AfterInsert = QueryDistribuidorAfterInsert
+    CachedUpdates = True
+    Connection = FDConnection1
+    SQL.Strings = (
+      'SELECT * FROM DISTRIBUIDOR WHERE ID = :ID')
+    Left = 312
+    Top = 120
+    ParamData = <
+      item
+        Name = 'ID'
+        DataType = ftInteger
+        FDDataType = dtInt32
+        ParamType = ptInput
+      end>
+    object QueryDistribuidorCalcID: TIntegerField
+      FieldName = 'ID'
+      Origin = 'ID'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object QueryDistribuidorCalcNOME: TStringField
+      FieldName = 'NOME'
+      Origin = 'NOME'
+      Size = 255
+    end
+    object QueryDistribuidorCalcCNPJ: TStringField
+      FieldName = 'CNPJ'
+      Origin = 'CNPJ'
+      Size = 30
     end
   end
 end

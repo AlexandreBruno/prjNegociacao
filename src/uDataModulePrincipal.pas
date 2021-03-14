@@ -44,31 +44,21 @@ type
     QueryDistribuidorNOME: TStringField;
     QueryDistribuidorCNPJ: TStringField;
     QueryListaDistribuidor: TFDQuery;
-    IntegerField1: TIntegerField;
-    StringField1: TStringField;
-    StringField2: TStringField;
     DataSourceListaDistribuidor: TDataSource;
     QueryListaProdutor: TFDQuery;
-    IntegerField3: TIntegerField;
-    StringField5: TStringField;
     DataSourceListaProdutor: TDataSource;
     QueryListaProdutorCredito: TFDQuery;
     DataSourceListaProdutorCredito: TDataSource;
     QueryProdutorCreditoID: TIntegerField;
     QueryProdutorCreditoID_PRODUTOR: TIntegerField;
     QueryProdutorCreditoID_DISTRIBUIDOR: TIntegerField;
-    QueryProdutorCreditoVALOR: TIntegerField;
     QueryListaProdutorCreditoID: TIntegerField;
     QueryListaProdutorCreditoID_PRODUTOR: TIntegerField;
     QueryListaProdutorCreditoID_DISTRIBUIDOR: TIntegerField;
-    QueryListaProdutorCreditoVALOR: TIntegerField;
     QueryProdutoID: TIntegerField;
     QueryProdutoNOME: TStringField;
     QueryProdutoVALOR: TFMTBCDField;
     QueryListaProduto: TFDQuery;
-    IntegerField2: TIntegerField;
-    StringField3: TStringField;
-    FMTBCDField1: TFMTBCDField;
     DataSourceListaProduto: TDataSource;
     QueryListaNegociacao: TFDQuery;
     IntegerField4: TIntegerField;
@@ -76,7 +66,7 @@ type
     IntegerField6: TIntegerField;
     StringField4: TStringField;
     FMTBCDField2: TFMTBCDField;
-    DataSource1: TDataSource;
+    DataSourceListaNegociacao: TDataSource;
     DataSourceListaNegociacaoItem: TDataSource;
     QueryListaNegociacaoItem: TFDQuery;
     QueryListaNegociacaoItemID_NEGOCIACAO: TIntegerField;
@@ -85,6 +75,28 @@ type
     QueryListaNegociacaoItemVALOR_UNITARIO: TFMTBCDField;
     QueryListaNegociacaoItemVALOR_TOTAL: TFMTBCDField;
     QueryListaNegociacaoItemID_PRODUTO: TIntegerField;
+    QueryListaDistribuidorID: TIntegerField;
+    QueryListaDistribuidorNOME: TStringField;
+    QueryListaDistribuidorCNPJ: TStringField;
+    QueryCodigo: TFDQuery;
+    QueryCodigoCODIGO: TIntegerField;
+    QueryListaProdutoID: TIntegerField;
+    QueryListaProdutoNOME: TStringField;
+    QueryListaProdutoVALOR: TFMTBCDField;
+    QueryListaProdutorID: TIntegerField;
+    QueryListaProdutorNOME: TStringField;
+    QueryListaProdutorCreditoDISTRIBUIDORNOME: TStringField;
+    QueryDistribuidorCalc: TFDQuery;
+    QueryDistribuidorCalcID: TIntegerField;
+    QueryDistribuidorCalcNOME: TStringField;
+    QueryDistribuidorCalcCNPJ: TStringField;
+    QueryProdutorCreditoVALOR: TFMTBCDField;
+    QueryListaProdutorCreditoVALOR: TFMTBCDField;
+    procedure QueryDistribuidorAfterInsert(DataSet: TDataSet);
+    procedure QueryProdutoAfterInsert(DataSet: TDataSet);
+    procedure QueryListaProdutorCreditoCalcFields(DataSet: TDataSet);
+    procedure QueryProdutorBeforePost(DataSet: TDataSet);
+    procedure QueryProdutorBeforeDelete(DataSet: TDataSet);
   private
     { Private declarations }
   public
@@ -99,5 +111,69 @@ implementation
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
 {$R *.dfm}
+
+procedure TDataModulePrincipal.QueryDistribuidorAfterInsert(DataSet: TDataSet);
+begin
+    QueryDistribuidorID.Value := -1;
+end;
+
+procedure TDataModulePrincipal.QueryListaProdutorCreditoCalcFields(
+  DataSet: TDataSet);
+begin
+    if not QueryListaProdutorCreditoID_DISTRIBUIDOR.AsString.IsEmpty then
+    begin
+        DataModulePrincipal.QueryDistribuidorCalc.Close;
+        DataModulePrincipal.QueryDistribuidorCalc.Params[0].Value := QueryListaProdutorCreditoID_DISTRIBUIDOR.Value;
+        DataModulePrincipal.QueryDistribuidorCalc.Open;
+
+        QueryListaProdutorCreditoDISTRIBUIDORNOME.Value := DataModulePrincipal.QueryDistribuidorCalcNOME.AsString;
+        DataModulePrincipal.QueryDistribuidorCalc.Close;
+    end;
+end;
+
+procedure TDataModulePrincipal.QueryProdutoAfterInsert(DataSet: TDataSet);
+begin
+    QueryProdutoID.Value := -1;
+end;
+
+procedure TDataModulePrincipal.QueryProdutorBeforeDelete(DataSet: TDataSet);
+begin
+    DataModulePrincipal.QueryListaProdutorCredito.Close;
+    DataModulePrincipal.QueryListaProdutorCredito.Params[0].Value := DataModulePrincipal.QueryProdutorID.Value;
+    DataModulePrincipal.QueryListaProdutorCredito.Open;
+
+    DataModulePrincipal.QueryListaProdutorCredito.First;
+    while not DataModulePrincipal.QueryListaProdutorCredito.Eof do
+    begin
+        if NOT DataModulePrincipal.QueryListaProdutorCreditoID_PRODUTOR.AsString.IsEmpty then
+        begin
+            DataModulePrincipal.QueryProdutorCredito.Close;
+            DataModulePrincipal.QueryProdutorCredito.Params[0].value := DataModulePrincipal.QueryListaProdutorCreditoID.Value;
+            DataModulePrincipal.QueryProdutorCredito.Params[1].value := DataModulePrincipal.QueryListaProdutorCreditoID_PRODUTOR.Value;
+            DataModulePrincipal.QueryProdutorCredito.Open;
+            DataModulePrincipal.QueryListaProdutorCredito.Delete;
+            DataModulePrincipal.QueryListaProdutorCredito.ApplyUpdates(0);
+        end;
+
+        DataModulePrincipal.QueryListaProdutorCredito.Next;
+    end;
+    DataModulePrincipal.QueryListaProdutorCredito.Close;
+end;
+
+procedure TDataModulePrincipal.QueryProdutorBeforePost(DataSet: TDataSet);
+begin
+    DataModulePrincipal.QueryListaProdutorCredito.First;
+    while not DataModulePrincipal.QueryListaProdutorCredito.Eof do
+    begin
+        if DataModulePrincipal.QueryListaProdutorCreditoID_PRODUTOR.AsString.IsEmpty then
+        begin
+            DataModulePrincipal.QueryListaProdutorCredito.Edit;
+            DataModulePrincipal.QueryListaProdutorCreditoID_PRODUTOR.value := QueryProdutorID.Value;
+            DataModulePrincipal.QueryListaProdutorCredito.Post;
+        end;
+
+        DataModulePrincipal.QueryListaProdutorCredito.Next;
+    end;
+end;
 
 end.
