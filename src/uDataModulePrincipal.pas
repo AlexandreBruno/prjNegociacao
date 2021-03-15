@@ -109,6 +109,7 @@ type
     DataSourceValorNegociado: TDataSource;
     QueryValorProdutorDistribuidorVALORLIMITE: TFMTBCDField;
     QueryNegociacaoDATA: TDateField;
+    QueryNegociacaoDATASTATUS: TDateField;
     procedure QueryDistribuidorAfterInsert(DataSet: TDataSet);
     procedure QueryProdutoAfterInsert(DataSet: TDataSet);
     procedure QueryListaProdutorCreditoCalcFields(DataSet: TDataSet);
@@ -240,6 +241,7 @@ begin
     QueryNegociacaoID.Value := -1;
     QueryNegociacaoSTATUS.Value := 'Pendente';
     QueryNegociacaoVALOR.Value := 0;
+    QueryNegociacaoDATA.Value := Date;
 end;
 
 procedure TDataModulePrincipal.QueryNegociacaoAfterOpen(DataSet: TDataSet);

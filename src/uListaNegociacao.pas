@@ -5,7 +5,11 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Data.DB, Vcl.StdCtrls,
-  Vcl.Grids, Vcl.DBGrids;
+  Vcl.Grids, Vcl.DBGrids, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client, frxClass, Data.Win.ADODB, Datasnap.Provider,
+  Datasnap.DBClient, frxDBSet;
 
 type
   TListaNegociacao = class(TForm)
@@ -21,6 +25,26 @@ type
     ButtonAprovar: TButton;
     ButtonConcluir: TButton;
     ButtonCancelar: TButton;
+    RelatorioDBDataset: TfrxDBDataset;
+    RelatorioClientDataSet: TClientDataSet;
+    RelatorioProvider: TDataSetProvider;
+    Relatorio: TfrxReport;
+    QueryRelatorio: TFDQuery;
+    QueryRelatorioCODIGONEGOCIACAO: TIntegerField;
+    QueryRelatorioVALORNEGOCIACAO: TFMTBCDField;
+    QueryRelatorioNOMEPRODUTOR: TStringField;
+    QueryRelatorioNOMEDISTRIBUIDOR: TStringField;
+    QueryRelatorioDATACADASTRO: TDateField;
+    QueryRelatorioDATASTATUS: TDateField;
+    QueryRelatorioSTATUS: TStringField;
+    Button1: TButton;
+    RelatorioClientDataSetCODIGONEGOCIACAO: TIntegerField;
+    RelatorioClientDataSetVALORNEGOCIACAO: TFMTBCDField;
+    RelatorioClientDataSetNOMEPRODUTOR: TStringField;
+    RelatorioClientDataSetNOMEDISTRIBUIDOR: TStringField;
+    RelatorioClientDataSetDATACADASTRO: TDateField;
+    RelatorioClientDataSetDATASTATUS: TDateField;
+    RelatorioClientDataSetSTATUS: TStringField;
     procedure EditProcurarExit(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure DBGrid1KeyPress(Sender: TObject; var Key: Char);
@@ -31,6 +55,7 @@ type
     procedure ButtonAprovarClick(Sender: TObject);
     procedure ButtonConcluirClick(Sender: TObject);
     procedure ButtonCancelarClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -90,6 +115,41 @@ begin
     end;
 end;
 
+procedure TListaNegociacao.Button1Click(Sender: TObject);
+var
+    select, where, ordem: string;
+begin
+    select := ' select a.id CodigoNegociacao,  a.valor ValorNegociacao, b.nome NomeProdutor, c.nome NomeDistribuidor, a.data DataCadastro, a.data DataStatus, a.Status from negociacao a'
+    +' inner join produtor b on b.id = a.id_produtor'
+    +' inner join distribuidor c on c.id = a.id_distribuidor ';
+
+    where := ' WHERE ';
+    if ComboCampos.ItemIndex = 0 then
+        where := where+' a.ID '
+    else if ComboCampos.ItemIndex = 1 then
+        where := where+' a.STATUS '
+    else if ComboCampos.ItemIndex = 2 then
+        where := where+' a.ID_PRODUTOR '
+    else
+        where := where+' a.ID_DISTRIBUIDOR ';
+    where := where+' LIKE '+QuotedStr('%'+EditProcurar.Text+'%');
+
+    ordem := ' ORDER BY ';
+    if ComboOrdem.ItemIndex = 0 then
+        ordem := ordem+' a.ID '
+    else if ComboOrdem.ItemIndex = 1 then
+        ordem := ordem+' a.STATUS, a.ID '
+    else if ComboOrdem.ItemIndex = 2 then
+        ordem := ordem+' a.ID_PRODUTOR, a.ID '
+    else
+        ordem := ordem+' a.ID_DISTRIBUIDOR, a.ID ';
+    QueryRelatorio.SQL.Text := select + where + ordem;
+    QueryRelatorio.Close;
+    QueryRelatorio.Open;
+
+    Relatorio.ShowReport(true);
+end;
+
 procedure TListaNegociacao.ButtonAprovarClick(Sender: TObject);
 begin
     if ((not DataModulePrincipal.QueryListaNegociacao.IsEmpty) and (DataModulePrincipal.QueryListaNegociacaoSTATUS.AsString = 'Pendente')) then
@@ -101,7 +161,7 @@ begin
             DataModulePrincipal.QueryNegociacao.Open;
             DataModulePrincipal.QueryNegociacao.Edit;
             DataModulePrincipal.QueryNegociacaoSTATUS.Value := 'Aprovada';
-            DataModulePrincipal.QueryNegociacaoDATA.Value := Date;
+            DataModulePrincipal.QueryNegociacaoDATASTATUS.Value := Date;
             DataModulePrincipal.QueryNegociacao.Post;
             DataModulePrincipal.QueryNegociacao.ApplyUpdates(0);
             DataModulePrincipal.QueryNegociacao.Close;
@@ -121,7 +181,7 @@ begin
             DataModulePrincipal.QueryNegociacao.Open;
             DataModulePrincipal.QueryNegociacao.Edit;
             DataModulePrincipal.QueryNegociacaoSTATUS.Value := 'Cancelada';
-            DataModulePrincipal.QueryNegociacaoDATA.Value := Date;
+            DataModulePrincipal.QueryNegociacaoDATASTATUS.Value := Date;
             DataModulePrincipal.QueryNegociacao.Post;
             DataModulePrincipal.QueryNegociacao.ApplyUpdates(0);
             DataModulePrincipal.QueryNegociacao.Close;
@@ -141,7 +201,7 @@ begin
             DataModulePrincipal.QueryNegociacao.Open;
             DataModulePrincipal.QueryNegociacao.Edit;
             DataModulePrincipal.QueryNegociacaoSTATUS.Value := 'Concluir';
-            DataModulePrincipal.QueryNegociacaoDATA.Value := Date;
+            DataModulePrincipal.QueryNegociacaoDATASTATUS.Value := Date;
             DataModulePrincipal.QueryNegociacao.Post;
             DataModulePrincipal.QueryNegociacao.ApplyUpdates(0);
             DataModulePrincipal.QueryNegociacao.Close;

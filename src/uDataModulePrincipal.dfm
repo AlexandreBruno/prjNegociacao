@@ -167,6 +167,10 @@ object DataModulePrincipal: TDataModulePrincipal
       FieldName = 'DATA'
       Origin = '"DATA"'
     end
+    object QueryNegociacaoDATASTATUS: TDateField
+      FieldName = 'DATASTATUS'
+      Origin = 'DATASTATUS'
+    end
   end
   object DataSourceDistribuidor: TDataSource
     DataSet = QueryDistribuidor

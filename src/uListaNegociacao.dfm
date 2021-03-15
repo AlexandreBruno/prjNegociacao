@@ -195,5 +195,504 @@ object ListaNegociacao: TListaNegociacao
       TabOrder = 2
       OnClick = ButtonCancelarClick
     end
+    object Button1: TButton
+      Left = 386
+      Top = 6
+      Width = 75
+      Height = 25
+      Caption = 'Relat'#243'rio'
+      TabOrder = 3
+      OnClick = Button1Click
+    end
+  end
+  object RelatorioDBDataset: TfrxDBDataset
+    UserName = 'frxDBDataset1'
+    CloseDataSource = False
+    DataSet = RelatorioClientDataSet
+    BCDToCurrency = False
+    Left = 608
+    Top = 216
+  end
+  object RelatorioClientDataSet: TClientDataSet
+    Active = True
+    Aggregates = <>
+    Params = <
+      item
+        DataType = ftDate
+        Name = 'DataIni'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftDate
+        Name = 'DataFim'
+        ParamType = ptUnknown
+      end
+      item
+        DataType = ftInteger
+        Name = 'ClienteIni'
+        ParamType = ptUnknown
+      end>
+    ProviderName = 'RelatorioProvider'
+    Left = 640
+    Top = 216
+    object RelatorioClientDataSetCODIGONEGOCIACAO: TIntegerField
+      FieldName = 'CODIGONEGOCIACAO'
+      Origin = 'ID'
+      Required = True
+    end
+    object RelatorioClientDataSetVALORNEGOCIACAO: TFMTBCDField
+      FieldName = 'VALORNEGOCIACAO'
+      Origin = 'VALOR'
+      Precision = 18
+      Size = 2
+    end
+    object RelatorioClientDataSetNOMEPRODUTOR: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'NOMEPRODUTOR'
+      Origin = 'NOME'
+      ProviderFlags = []
+      ReadOnly = True
+      Size = 255
+    end
+    object RelatorioClientDataSetNOMEDISTRIBUIDOR: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'NOMEDISTRIBUIDOR'
+      Origin = 'NOME'
+      ProviderFlags = []
+      ReadOnly = True
+      Size = 255
+    end
+    object RelatorioClientDataSetDATACADASTRO: TDateField
+      FieldName = 'DATACADASTRO'
+      Origin = '"DATA"'
+    end
+    object RelatorioClientDataSetDATASTATUS: TDateField
+      FieldName = 'DATASTATUS'
+      Origin = '"DATA"'
+      ProviderFlags = []
+    end
+    object RelatorioClientDataSetSTATUS: TStringField
+      FieldName = 'STATUS'
+      Origin = 'STATUS'
+      Size = 30
+    end
+  end
+  object RelatorioProvider: TDataSetProvider
+    DataSet = QueryRelatorio
+    Left = 672
+    Top = 216
+  end
+  object Relatorio: TfrxReport
+    Version = '6.9.6'
+    DotMatrixReport = False
+    IniFile = '\Software\Fast Reports'
+    PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick, pbCopy, pbSelection]
+    PreviewOptions.Zoom = 1.000000000000000000
+    PrintOptions.Printer = 'Default'
+    PrintOptions.PrintOnSheet = 0
+    ReportOptions.CreateDate = 44254.593315937500000000
+    ReportOptions.LastChange = 44270.746959826400000000
+    ScriptLanguage = 'PascalScript'
+    ScriptText.Strings = (
+      ''
+      'begin'
+      ''
+      'end.')
+    Left = 608
+    Top = 264
+    Datasets = <
+      item
+        DataSet = RelatorioDBDataset
+        DataSetName = 'frxDBDataset1'
+      end>
+    Variables = <>
+    Style = <>
+    object Data: TfrxDataPage
+      Height = 1000.000000000000000000
+      Width = 1000.000000000000000000
+    end
+    object Page1: TfrxReportPage
+      PaperWidth = 210.000000000000000000
+      PaperHeight = 297.000000000000000000
+      PaperSize = 9
+      LeftMargin = 10.000000000000000000
+      RightMargin = 10.000000000000000000
+      TopMargin = 10.000000000000000000
+      BottomMargin = 10.000000000000000000
+      Frame.Typ = []
+      MirrorMode = []
+      object ReportTitle1: TfrxReportTitle
+        FillType = ftBrush
+        Frame.Typ = []
+        Height = 90.708720000000000000
+        Top = 18.897650000000000000
+        Width = 718.110700000000000000
+        object Memo2: TfrxMemoView
+          AllowVectorExport = True
+          Left = 1.889765000000000000
+          Top = 5.669295000000000000
+          Width = 714.331170000000000000
+          Height = 79.370130000000000000
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -67
+          Font.Name = 'Calibri'
+          Font.Style = [fsBold]
+          Frame.Typ = []
+          HAlign = haCenter
+          Memo.UTF8W = (
+            'Negocia'#231#245'es')
+          ParentFont = False
+        end
+      end
+      object MasterData1: TfrxMasterData
+        FillType = ftBrush
+        Frame.Typ = []
+        Height = 56.692950000000000000
+        Top = 215.433210000000000000
+        Width = 718.110700000000000000
+        DataSet = RelatorioDBDataset
+        DataSetName = 'frxDBDataset1'
+        RowCount = 0
+        Stretched = True
+        object frxDBDataset1NOMEPRODUTOR: TfrxMemoView
+          IndexTag = 1
+          AllowVectorExport = True
+          Left = 124.724490000000000000
+          Width = 162.519790000000000000
+          Height = 18.897650000000000000
+          DataField = 'NOMEPRODUTOR'
+          DataSet = RelatorioDBDataset
+          DataSetName = 'frxDBDataset1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Memo.UTF8W = (
+            '[frxDBDataset1."NOMEPRODUTOR"]')
+          ParentFont = False
+        end
+        object frxDBDataset1NOMEDISTRIBUIDOR: TfrxMemoView
+          IndexTag = 1
+          AllowVectorExport = True
+          Left = 287.244280000000000000
+          Width = 166.299320000000000000
+          Height = 18.897650000000000000
+          DataField = 'NOMEDISTRIBUIDOR'
+          DataSet = RelatorioDBDataset
+          DataSetName = 'frxDBDataset1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Memo.UTF8W = (
+            '[frxDBDataset1."NOMEDISTRIBUIDOR"]')
+          ParentFont = False
+        end
+        object frxDBDataset1STATUS: TfrxMemoView
+          IndexTag = 1
+          AllowVectorExport = True
+          Left = 453.323130000000000000
+          Width = 60.472480000000000000
+          Height = 18.897650000000000000
+          DataField = 'STATUS'
+          DataSet = RelatorioDBDataset
+          DataSetName = 'frxDBDataset1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Memo.UTF8W = (
+            '[frxDBDataset1."STATUS"]')
+          ParentFont = False
+        end
+        object frxDBDataset1DATASTATUS: TfrxMemoView
+          IndexTag = 1
+          AllowVectorExport = True
+          Left = 514.016080000000000000
+          Width = 75.590600000000000000
+          Height = 18.897650000000000000
+          DataField = 'DATASTATUS'
+          DataSet = RelatorioDBDataset
+          DataSetName = 'frxDBDataset1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Memo.UTF8W = (
+            '[frxDBDataset1."DATASTATUS"]')
+          ParentFont = False
+        end
+        object frxDBDataset1VALORNEGOCIACAO: TfrxMemoView
+          IndexTag = 1
+          AllowVectorExport = True
+          Left = 589.606680000000000000
+          Width = 120.944960000000000000
+          Height = 18.897650000000000000
+          DataField = 'VALORNEGOCIACAO'
+          DataSet = RelatorioDBDataset
+          DataSetName = 'frxDBDataset1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          HAlign = haRight
+          Memo.UTF8W = (
+            '[frxDBDataset1."VALORNEGOCIACAO"]')
+          ParentFont = False
+        end
+        object frxDBDataset1CODIGONEGOCIACAO: TfrxMemoView
+          IndexTag = 1
+          AllowVectorExport = True
+          Width = 60.472480000000000000
+          Height = 18.897650000000000000
+          DataField = 'CODIGONEGOCIACAO'
+          DataSet = RelatorioDBDataset
+          DataSetName = 'frxDBDataset1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          HAlign = haCenter
+          Memo.UTF8W = (
+            '[frxDBDataset1."CODIGONEGOCIACAO"]')
+          ParentFont = False
+        end
+        object frxDBDataset1DATACADASTRO: TfrxMemoView
+          IndexTag = 1
+          AllowVectorExport = True
+          Left = 60.472480000000000000
+          Width = 64.252010000000000000
+          Height = 18.897650000000000000
+          DataField = 'DATACADASTRO'
+          DataSet = RelatorioDBDataset
+          DataSetName = 'frxDBDataset1'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = []
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Memo.UTF8W = (
+            '[frxDBDataset1."DATACADASTRO"]')
+          ParentFont = False
+        end
+      end
+      object PageFooter1: TfrxPageFooter
+        FillType = ftBrush
+        Frame.Typ = []
+        Height = 22.677180000000000000
+        Top = 332.598640000000000000
+        Width = 718.110700000000000000
+        object Memo1: TfrxMemoView
+          AllowVectorExport = True
+          Left = 642.520100000000000000
+          Width = 75.590600000000000000
+          Height = 18.897650000000000000
+          Frame.Typ = []
+          HAlign = haRight
+          Memo.UTF8W = (
+            'P'#225'gina [Page#]')
+        end
+      end
+      object PageHeader1: TfrxPageHeader
+        FillType = ftBrush
+        Frame.Typ = []
+        Height = 22.677180000000000000
+        Top = 132.283550000000000000
+        Width = 718.110700000000000000
+        Stretched = True
+        object Memo3: TfrxMemoView
+          AllowVectorExport = True
+          Width = 60.472480000000000000
+          Height = 18.897650000000000000
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Memo.UTF8W = (
+            'Contrato')
+          ParentFont = False
+        end
+        object Memo4: TfrxMemoView
+          AllowVectorExport = True
+          Left = 124.724490000000000000
+          Width = 162.519790000000000000
+          Height = 18.897650000000000000
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Memo.UTF8W = (
+            'Produtor')
+          ParentFont = False
+        end
+        object Memo5: TfrxMemoView
+          AllowVectorExport = True
+          Left = 287.244280000000000000
+          Width = 166.299320000000000000
+          Height = 18.897650000000000000
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Memo.UTF8W = (
+            'Distribuidor')
+          ParentFont = False
+        end
+        object Memo6: TfrxMemoView
+          AllowVectorExport = True
+          Left = 60.472480000000000000
+          Width = 64.252010000000000000
+          Height = 18.897650000000000000
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Memo.UTF8W = (
+            'Cadastro')
+          ParentFont = False
+        end
+        object Memo7: TfrxMemoView
+          AllowVectorExport = True
+          Left = 453.543600000000000000
+          Width = 60.472480000000000000
+          Height = 18.897650000000000000
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Memo.UTF8W = (
+            'Status')
+          ParentFont = False
+        end
+        object Memo8: TfrxMemoView
+          AllowVectorExport = True
+          Left = 514.016080000000000000
+          Width = 75.590600000000000000
+          Height = 18.897650000000000000
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          Memo.UTF8W = (
+            'Data')
+          ParentFont = False
+        end
+        object Memo9: TfrxMemoView
+          AllowVectorExport = True
+          Left = 589.606680000000000000
+          Width = 120.944960000000000000
+          Height = 18.897650000000000000
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+          HAlign = haRight
+          Memo.UTF8W = (
+            'Valor')
+          ParentFont = False
+        end
+      end
+    end
+  end
+  object QueryRelatorio: TFDQuery
+    CachedUpdates = True
+    Connection = DataModulePrincipal.FDConnection1
+    SQL.Strings = (
+      
+        'select a.id CodigoNegociacao,  a.valor ValorNegociacao, b.nome N' +
+        'omeProdutor, c.nome NomeDistribuidor, a.data DataCadastro, a.dat' +
+        'a DataStatus, a.Status from negociacao a'
+      'inner join produtor b on b.id = a.id_produtor'
+      'inner join distribuidor c on c.id = a.id_distribuidor')
+    Left = 640
+    Top = 264
+    ParamData = <
+      item
+        Position = 1
+        Name = 'DataIni'
+        DataType = ftDate
+        ParamType = ptInput
+      end
+      item
+        Position = 2
+        Name = 'DataFim'
+        DataType = ftDate
+        ParamType = ptInput
+      end
+      item
+        Position = 3
+        Name = 'ClienteIni'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+    object QueryRelatorioCODIGONEGOCIACAO: TIntegerField
+      FieldName = 'CODIGONEGOCIACAO'
+      Origin = 'ID'
+      Required = True
+    end
+    object QueryRelatorioVALORNEGOCIACAO: TFMTBCDField
+      FieldName = 'VALORNEGOCIACAO'
+      Origin = 'VALOR'
+      Precision = 18
+      Size = 2
+    end
+    object QueryRelatorioNOMEPRODUTOR: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'NOMEPRODUTOR'
+      Origin = 'NOME'
+      ProviderFlags = []
+      ReadOnly = True
+      Size = 255
+    end
+    object QueryRelatorioNOMEDISTRIBUIDOR: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'NOMEDISTRIBUIDOR'
+      Origin = 'NOME'
+      ProviderFlags = []
+      ReadOnly = True
+      Size = 255
+    end
+    object QueryRelatorioDATACADASTRO: TDateField
+      FieldName = 'DATACADASTRO'
+      Origin = '"DATA"'
+    end
+    object QueryRelatorioDATASTATUS: TDateField
+      FieldName = 'DATASTATUS'
+      Origin = '"DATA"'
+      ProviderFlags = []
+    end
+    object QueryRelatorioSTATUS: TStringField
+      FieldName = 'STATUS'
+      Origin = 'STATUS'
+      Size = 30
+    end
   end
 end
