@@ -11,9 +11,10 @@ Neste projeto:\
     • Relatório das negociações filtradas;\
 \
 \
-Para INCLUIR um registro, pressione a tecla INSERT no teclado;\
-Para EDITAR o registro, duplo clique do mouse ou pressione a tecla ENTER no teclado;\
-Para EXCLUIR o registro,  pressione a tecla DELETE no teclado;\
+• As telas de Cadastros e Movimentações, possuem listas e a partir delas, o usuário poderá, fazer as suas operações;\
+• A partir da lista de Negociações, o usuário poderia, cancelar, concluir, aprovar e gerar o relatório de Negociações;\
 \
-As telas de Cadastros e Movimentações, possuem listas e a partir delas, o usuário poderá, fazer as suas operações;\
-A partir da lista de Negociações, o usuário poderia, cancelar, concluir, aprovar e gerar o relatório de Negociações.
+• Para as ações abaixo o usuário deve clicar previamente na grid da respectiva tela:\
+  • Para INCLUIR um registro, pressione a tecla INSERT no teclado;\
+  • Para EDITAR o registro, duplo clique do mouse ou pressione a tecla ENTER no teclado;\
+  • Para EXCLUIR o registro,  pressione a tecla DELETE no teclado.
