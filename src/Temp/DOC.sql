@@ -1,20 +1,16 @@
-• Deverá ser criado um cadastro de produtor, onde será informado o nome do produtor e seu
-CPF/CNPJ. Também será possível no cadastro do produtor, informar o limite de crédito que ele
-tem com cada distribuidor. Lembrando que um produtor pode ter diversos limites de crédito com
-diversos distribuidores.
---PRODUTOR
-----PRODUTOR_CREDITO
-
-• Deverá ser criado uma tela de manutenção de negociação onde o usuário poderá informar os
-dados para realizar o cadastro ou alteração de uma negociação. Nesta tela o usuário poderá
-informar o produtor, o distribuidor e os itens da negociação. Deverá ter um campo totalizando a
+• Deverá ser criado uma tela de manutenção de negociação onde o usuário poderá informar:
+	os dados para realizar o cadastro ou alteração de uma negociação. 
+	Nesta tela o usuário poderá informar:
+		o produtor, 
+		o distribuidor e 
+		os itens da negociação. Deverá ter um campo totalizando a
 negociação e um informando o status daquela negociação.
 --NEGOCIACAO
 ----NEGOCIACAO_ITEM
 
-• A negociação possui apenas 4 status possíveis, “Pendente”, “Aprovada”, “Concluir” e
-“Cancelada”. Sempre que uma negociação for gravada o status padrão dela será “Pendente”. Para
-aprovar, concluir ou cancelar esta negociação existirá uma tela para manutenção de negociação,
+--• A negociação possui apenas 4 status possíveis, “Pendente”, “Aprovada”, “Concluir” e “Cancelada”. 
+--Sempre que uma negociação for gravada o status padrão dela será “Pendente”.
+Para aprovar, concluir ou cancelar esta negociação existirá uma tela para manutenção de negociação,
 onde o usuário irá informar o código da negociação pendente e então ele poderá aprovar, concluir
 ou cancelar.
 

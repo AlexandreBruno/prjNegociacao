@@ -46,6 +46,7 @@ object Menu: TMenu
       Caption = 'Movimenta'#231#245'es'
       object ListaNegociacoes: TMenuItem
         Caption = 'Negocia'#231#245'es'
+        OnClick = ListaNegociacoesClick
       end
     end
   end

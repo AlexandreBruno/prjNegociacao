@@ -10,7 +10,10 @@ uses
   uListaProdutos in 'uListaProdutos.pas' {ListaProdutos},
   UCadastroProdutores in 'UCadastroProdutores.pas' {CadastroProdutores},
   uListaProdutores in 'uListaProdutores.pas' {ListaProdutores},
-  UCadastroProdutorCredito in 'UCadastroProdutorCredito.pas' {CadastroProdutorCredito};
+  UCadastroProdutorCredito in 'UCadastroProdutorCredito.pas' {CadastroProdutorCredito},
+  uListaNegociacao in 'uListaNegociacao.pas',
+  UCadastroNegociacao in 'UCadastroNegociacao.pas',
+  UCadastroNegociacaoItem in 'UCadastroNegociacaoItem.pas';
 
 {$R *.res}
 

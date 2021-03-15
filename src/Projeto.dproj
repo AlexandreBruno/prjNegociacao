@@ -137,6 +137,9 @@
             <Form>CadastroProdutorCredito</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="uListaNegociacao.pas"/>
+        <DCCReference Include="UCadastroNegociacao.pas"/>
+        <DCCReference Include="UCadastroNegociacaoItem.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

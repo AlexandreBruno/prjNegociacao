@@ -23,6 +23,7 @@ type
     procedure CadastroDistribuidorClick(Sender: TObject);
     procedure CadastroProdutosClick(Sender: TObject);
     procedure CadastroProdutoClick(Sender: TObject);
+    procedure ListaNegociacoesClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -37,7 +38,7 @@ implementation
 {$R *.dfm}
 
 uses uDataModulePrincipal, uListaDistribuidores, uListaProdutos,
-  uListaProdutores;
+  uListaProdutores, uListaNegociacao;
 
 procedure TMenu.CadastroDistribuidorClick(Sender: TObject);
 begin
@@ -63,6 +64,11 @@ procedure TMenu.FormCreate(Sender: TObject);
 begin
     if DataModulePrincipal = nil then
         Application.CreateForm(TDataModulePrincipal, DataModulePrincipal);
+end;
+
+procedure TMenu.ListaNegociacoesClick(Sender: TObject);
+begin
+    TListaNegociacao.Create(Self);
 end;
 
 procedure TMenu.Sair1Click(Sender: TObject);

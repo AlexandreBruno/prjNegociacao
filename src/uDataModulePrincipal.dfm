@@ -121,6 +121,9 @@ object DataModulePrincipal: TDataModulePrincipal
     end
   end
   object QueryNegociacao: TFDQuery
+    AfterOpen = QueryNegociacaoAfterOpen
+    AfterInsert = QueryNegociacaoAfterInsert
+    BeforePost = QueryNegociacaoBeforePost
     CachedUpdates = True
     Connection = FDConnection1
     SQL.Strings = (
@@ -142,10 +145,12 @@ object DataModulePrincipal: TDataModulePrincipal
     object QueryNegociacaoID_PRODUTOR: TIntegerField
       FieldName = 'ID_PRODUTOR'
       Origin = 'ID_PRODUTOR'
+      OnValidate = QueryNegociacaoID_PRODUTORValidate
     end
     object QueryNegociacaoID_DISTRIBUIDOR: TIntegerField
       FieldName = 'ID_DISTRIBUIDOR'
       Origin = 'ID_DISTRIBUIDOR'
+      OnValidate = QueryNegociacaoID_PRODUTORValidate
     end
     object QueryNegociacaoSTATUS: TStringField
       FieldName = 'STATUS'
@@ -157,6 +162,10 @@ object DataModulePrincipal: TDataModulePrincipal
       Origin = 'VALOR'
       Precision = 18
       Size = 2
+    end
+    object QueryNegociacaoDATA: TDateField
+      FieldName = 'DATA'
+      Origin = '"DATA"'
     end
   end
   object DataSourceDistribuidor: TDataSource
@@ -429,32 +438,50 @@ object DataModulePrincipal: TDataModulePrincipal
     Top = 408
   end
   object QueryListaNegociacao: TFDQuery
+    OnCalcFields = QueryListaNegociacaoCalcFields
     CachedUpdates = True
     Connection = FDConnection1
     SQL.Strings = (
       'SELECT * FROM NEGOCIACAO')
     Left = 160
     Top = 528
-    object IntegerField4: TIntegerField
+    object QueryListaNegociacaoNOMEDISTRIBUIDOR: TStringField
+      DisplayLabel = 'Distribuidor'
+      FieldKind = fkCalculated
+      FieldName = 'NOMEDISTRIBUIDOR'
+      Size = 255
+      Calculated = True
+    end
+    object QueryListaNegociacaoNOMEPRODUTOR: TStringField
+      DisplayLabel = 'Produtor'
+      FieldKind = fkCalculated
+      FieldName = 'NOMEPRODUTOR'
+      Size = 255
+      Calculated = True
+    end
+    object QueryListaNegociacaoID: TIntegerField
+      DisplayLabel = 'C'#243'digo'
       FieldName = 'ID'
       Origin = 'ID'
       ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
       Required = True
     end
-    object IntegerField5: TIntegerField
+    object QueryListaNegociacaoID_PRODUTOR: TIntegerField
       FieldName = 'ID_PRODUTOR'
       Origin = 'ID_PRODUTOR'
     end
-    object IntegerField6: TIntegerField
+    object QueryListaNegociacaoID_DISTRIBUIDOR: TIntegerField
       FieldName = 'ID_DISTRIBUIDOR'
       Origin = 'ID_DISTRIBUIDOR'
     end
-    object StringField4: TStringField
+    object QueryListaNegociacaoSTATUS: TStringField
+      DisplayLabel = 'Status'
       FieldName = 'STATUS'
       Origin = 'STATUS'
       Size = 30
     end
-    object FMTBCDField2: TFMTBCDField
+    object QueryListaNegociacaoVALOR: TFMTBCDField
+      DisplayLabel = 'Valor'
       FieldName = 'VALOR'
       Origin = 'VALOR'
       Precision = 18
@@ -472,7 +499,12 @@ object DataModulePrincipal: TDataModulePrincipal
     Top = 584
   end
   object QueryListaNegociacaoItem: TFDQuery
+    BeforeOpen = QueryListaNegociacaoItemBeforeOpen
+    AfterPost = QueryListaNegociacaoItemAfterPost
+    AfterDelete = QueryListaNegociacaoItemAfterPost
+    OnCalcFields = QueryListaNegociacaoItemCalcFields
     CachedUpdates = True
+    IndexFieldNames = 'SEQUENCIA'
     Connection = FDConnection1
     SQL.Strings = (
       
@@ -493,22 +525,35 @@ object DataModulePrincipal: TDataModulePrincipal
       Required = True
     end
     object QueryListaNegociacaoItemSEQUENCIA: TIntegerField
+      DisplayLabel = 'Sequ'#234'ncia'
       FieldName = 'SEQUENCIA'
       Origin = 'SEQUENCIA'
       ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
       Required = True
     end
+    object QueryListaNegociacaoItemNOMEPRODUTO: TStringField
+      DisplayLabel = 'Produto'
+      FieldKind = fkCalculated
+      FieldName = 'NOMEPRODUTO'
+      Size = 255
+      Calculated = True
+    end
     object QueryListaNegociacaoItemQUANTIDADE: TIntegerField
+      DisplayLabel = 'Qtd'
       FieldName = 'QUANTIDADE'
       Origin = 'QUANTIDADE'
+      OnValidate = QueryListaNegociacaoItemQUANTIDADEValidate
     end
     object QueryListaNegociacaoItemVALOR_UNITARIO: TFMTBCDField
+      DisplayLabel = 'Valor Unit'#225'rio'
       FieldName = 'VALOR_UNITARIO'
       Origin = 'VALOR_UNITARIO'
+      OnValidate = QueryListaNegociacaoItemQUANTIDADEValidate
       Precision = 18
       Size = 2
     end
     object QueryListaNegociacaoItemVALOR_TOTAL: TFMTBCDField
+      DisplayLabel = 'Valor Total'
       FieldName = 'VALOR_TOTAL'
       Origin = 'VALOR_TOTAL'
       Precision = 18
@@ -517,6 +562,7 @@ object DataModulePrincipal: TDataModulePrincipal
     object QueryListaNegociacaoItemID_PRODUTO: TIntegerField
       FieldName = 'ID_PRODUTO'
       Origin = 'ID_PRODUTO'
+      OnValidate = QueryListaNegociacaoItemID_PRODUTOValidate
     end
   end
   object QueryCodigo: TFDQuery
@@ -565,5 +611,139 @@ object DataModulePrincipal: TDataModulePrincipal
       Origin = 'CNPJ'
       Size = 30
     end
+  end
+  object QueryProdutorCalc: TFDQuery
+    BeforePost = QueryProdutorBeforePost
+    BeforeDelete = QueryProdutorBeforeDelete
+    CachedUpdates = True
+    Connection = FDConnection1
+    SQL.Strings = (
+      'SELECT * FROM PRODUTOR WHERE ID = :ID')
+    Left = 312
+    Top = 240
+    ParamData = <
+      item
+        Name = 'ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+    object QueryProdutorCalcID: TIntegerField
+      FieldName = 'ID'
+      Origin = 'ID'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object QueryProdutorCalcNOME: TStringField
+      FieldName = 'NOME'
+      Origin = 'NOME'
+      Size = 255
+    end
+  end
+  object QueryProdutoCalc: TFDQuery
+    AfterInsert = QueryProdutoAfterInsert
+    CachedUpdates = True
+    Connection = FDConnection1
+    SQL.Strings = (
+      'SELECT * FROM PRODUTO WHERE ID = :ID')
+    Left = 312
+    Top = 408
+    ParamData = <
+      item
+        Name = 'ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+    object QueryProdutoCalcID: TIntegerField
+      FieldName = 'ID'
+      Origin = 'ID'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object QueryProdutoCalcNOME: TStringField
+      FieldName = 'NOME'
+      Origin = 'NOME'
+      Size = 255
+    end
+    object QueryProdutoCalcVALOR: TFMTBCDField
+      FieldName = 'VALOR'
+      Origin = 'VALOR'
+      Precision = 18
+      Size = 2
+    end
+  end
+  object QueryValorProdutorDistribuidor: TFDQuery
+    BeforeOpen = QueryValorProdutorDistribuidorBeforeOpen
+    CachedUpdates = True
+    Connection = FDConnection1
+    SQL.Strings = (
+      'select sum(valor) VALORLIMITE from produtor_credito '
+      'where id_produtor = :id_produtor '
+      'and id_distribuidor = :id_distribuidor'
+      'group by id_produtor, id_distribuidor')
+    Left = 496
+    Top = 56
+    ParamData = <
+      item
+        Name = 'ID_PRODUTOR'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'ID_DISTRIBUIDOR'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+    object QueryValorProdutorDistribuidorVALORLIMITE: TFMTBCDField
+      AutoGenerateValue = arDefault
+      FieldName = 'VALORLIMITE'
+      Origin = 'VALORLIMITE'
+      ProviderFlags = []
+      ReadOnly = True
+      Precision = 18
+      Size = 2
+    end
+  end
+  object QueryValorNegociado: TFDQuery
+    BeforeOpen = QueryValorProdutorDistribuidorBeforeOpen
+    CachedUpdates = True
+    Connection = FDConnection1
+    SQL.Strings = (
+      
+        'select sum(valor) VALORNEGOCIADO from negociacao a where id_prod' +
+        'utor = :id_produtor and id_distribuidor = :id_distribuidor and s' +
+        'tatus in ('#39'Aprovada'#39', '#39'Concluir'#39') group by id_produtor, id_distr' +
+        'ibuidor')
+    Left = 560
+    Top = 56
+    ParamData = <
+      item
+        Name = 'ID_PRODUTOR'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'ID_DISTRIBUIDOR'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+    object QueryValorNegociadoVALORNEGOCIADO: TFMTBCDField
+      AutoGenerateValue = arDefault
+      FieldName = 'VALORNEGOCIADO'
+      Origin = 'VALORNEGOCIADO'
+      ProviderFlags = []
+      ReadOnly = True
+      Precision = 18
+      Size = 2
+    end
+  end
+  object DataSourceValorProdutorDistribuidor: TDataSource
+    DataSet = QueryValorProdutorDistribuidor
+    Left = 496
+    Top = 104
+  end
+  object DataSourceValorNegociado: TDataSource
+    DataSet = QueryValorNegociado
+    Left = 560
+    Top = 104
   end
 end
